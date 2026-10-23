@@ -1,300 +1,150 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f3ec">
-  <meta name="description" content="A practical self-assessment for understanding your organization's readiness to adopt AI responsibly and effectively.">
-  <title>AI Readiness Assessment</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      color-scheme: light;
-      --paper: #f4f3ec;
-      --ink: #20271f;
-      --muted: #687064;
-      --line: #d8dbcf;
-      --green: #285c45;
-      --green-dark: #183e30;
-      --lime: #d5e57b;
-      --coral: #e77b5d;
-      --white: #fffefa;
-      --serif: "Fraunces", Georgia, serif;
-      --sans: "DM Sans", "Helvetica Neue", sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--paper);
-      color: var(--ink);
-      font: 16px/1.5 var(--sans);
-      background-image: radial-gradient(#a4ad94 0.55px, transparent 0.55px);
-      background-size: 8px 8px;
-    }
-    button { font: inherit; }
-    .shell { max-width: 1120px; margin: 0 auto; padding: 0 34px; }
-    .topbar {
-      display: flex; align-items: center; justify-content: space-between;
-      min-height: 76px; border-bottom: 1px solid var(--line);
-    }
-    .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; letter-spacing: 0; }
-    .brand-mark { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--green); color: var(--lime); font-size: 15px; }
-    .privacy { color: var(--muted); font-size: 13px; }
-    main { padding: 68px 0 80px; }
-    .intro { max-width: 760px; animation: rise .55s ease-out both; }
-    .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
-    .eyebrow::before { content: ""; width: 25px; height: 2px; background: var(--coral); }
-    h1, h2, h3, p { margin-top: 0; }
-    h1 { max-width: 720px; margin: 17px 0 20px; font: 600 clamp(42px, 6vw, 72px)/.99 var(--serif); letter-spacing: 0; }
-    .intro-copy { max-width: 570px; margin-bottom: 28px; color: var(--muted); font-size: 17px; }
-    .meta { display: flex; flex-wrap: wrap; gap: 10px 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
-    .meta span { display: inline-flex; align-items: center; gap: 8px; }
-    .meta span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--coral); }
-    .assessment { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 68px; margin-top: 55px; align-items: start; }
-    .question-area { min-width: 0; }
-    .progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: var(--muted); font-size: 13px; }
-    .progress-track { height: 5px; overflow: hidden; background: #e0e3d8; }
-    .progress-value { width: 0; height: 100%; background: var(--green); transition: width .25s ease; }
-    .question { padding: 30px 0 25px; border-bottom: 1px solid var(--line); animation: rise .35s ease-out both; }
-    .question h2 { margin-bottom: 7px; font: 600 25px/1.2 var(--serif); letter-spacing: 0; }
-    .question .hint { margin-bottom: 18px; color: var(--muted); font-size: 14px; }
-    .choices { display: grid; gap: 8px; }
-    .choice {
-      display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start;
-      width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 3px;
-      background: var(--white); color: var(--ink); text-align: left; cursor: pointer;
-      transition: border-color .15s ease, background .15s ease, transform .15s ease;
-    }
-    .choice:hover { border-color: var(--green); transform: translateX(2px); }
-    .choice[aria-pressed="true"] { border-color: var(--green); background: #eaf0e7; box-shadow: inset 3px 0 var(--green); }
-    .choice-index { display: grid; width: 21px; height: 21px; place-items: center; border: 1px solid #bfc6b9; border-radius: 50%; color: var(--muted); font-size: 11px; }
-    .choice[aria-pressed="true"] .choice-index { border-color: var(--green); background: var(--green); color: white; }
-    .choice-copy { font-size: 14px; }
-    .question-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 23px; }
-    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 45px; padding: 0 18px; border: 1px solid var(--green); border-radius: 3px; background: var(--green); color: white; font-weight: 600; cursor: pointer; transition: background .15s ease, transform .15s ease; }
-    .button:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-1px); }
-    .button:disabled { border-color: #c7cbbf; background: #c7cbbf; cursor: not-allowed; }
-    .button.secondary { background: transparent; color: var(--green); }
-    .button.secondary:hover:not(:disabled) { background: #e8eadf; }
-    .side-note { position: sticky; top: 25px; padding-top: 4px; }
-    .side-note h2 { margin-bottom: 13px; font: 600 22px/1.15 var(--serif); }
-    .side-note p { color: var(--muted); font-size: 14px; }
-    .category-list { display: grid; gap: 0; margin-top: 25px; border-top: 1px solid var(--line); }
-    .category-row { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
-    .category-name { font-size: 13px; font-weight: 600; }
-    .category-state { color: var(--muted); font-size: 11px; }
-    .mini-track { grid-column: 1 / -1; height: 3px; background: #e0e3d8; }
-    .mini-value { height: 100%; width: 0; background: var(--green); transition: width .2s ease; }
-    .result { margin-top: 55px; padding-top: 38px; border-top: 1px solid var(--line); animation: rise .45s ease-out both; }
-    .result[hidden], .intro[hidden], .assessment[hidden] { display: none; }
-    .result-top { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 36px; align-items: center; }
-    .result h2 { max-width: 600px; margin: 12px 0; font: 600 42px/1.05 var(--serif); }
-    .result-lead { max-width: 620px; color: var(--muted); }
-    .score-disc { display: grid; width: 150px; aspect-ratio: 1; place-content: center; justify-self: end; border: 1px solid var(--green); border-radius: 50%; background: var(--lime); text-align: center; }
-    .score-number { font: 600 44px/.95 var(--serif); }
-    .score-caption { margin-top: 7px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-    .result-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 54px; margin-top: 38px; }
-    .result-columns h3 { margin-bottom: 13px; font-size: 14px; }
-    .result-categories { display: grid; gap: 13px; }
-    .result-category { display: grid; grid-template-columns: 125px 1fr 35px; gap: 10px; align-items: center; font-size: 12px; }
-    .result-category .mini-track { grid-column: auto; }
-    .result-category strong { text-align: right; font-size: 12px; }
-    .next-steps { margin: 0; padding-left: 19px; color: var(--muted); font-size: 14px; }
-    .next-steps li { padding: 0 0 10px 4px; }
-    .result-actions { display: flex; gap: 10px; margin-top: 31px; }
-    .footnote { margin: 35px 0 0; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-    :focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
-    @keyframes rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 760px) {
-      .shell { padding: 0 20px; }
-      main { padding: 46px 0 55px; }
-      .topbar { min-height: 64px; }
-      .assessment { grid-template-columns: 1fr; gap: 30px; margin-top: 40px; }
-      .side-note { position: static; padding-top: 20px; border-top: 1px solid var(--line); }
-      .category-list { grid-template-columns: 1fr 1fr; column-gap: 20px; }
-      .result-top { grid-template-columns: 1fr 110px; gap: 15px; }
-      .result h2 { font-size: 34px; }
-      .score-disc { width: 105px; }
-      .score-number { font-size: 34px; }
-      .result-columns { grid-template-columns: 1fr; gap: 28px; }
-    }
-    @media (max-width: 420px) {
-      .privacy { max-width: 112px; text-align: right; font-size: 11px; }
-      .meta { gap: 8px 15px; }
-      .question h2 { font-size: 22px; }
-      .category-list { grid-template-columns: 1fr; }
-      .result-category { grid-template-columns: 105px 1fr 32px; gap: 7px; }
-      .result-actions { flex-wrap: wrap; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Readiness Assessment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#fff;--ink:#222;--mute:#5a5a5a;--line:#e4e4e4;--panel:#f5f5f5;--red:#d10000;--btn:#d10000;--sel:#fdf0f0;--dot:#bbb;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141414;--ink:#f0f0f0;--mute:#a8a8a8;--line:#333;--panel:#1f1f1f;--red:#ff6161;--sel:#2b1717;--dot:#666;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141414;--ink:#f0f0f0;--mute:#a8a8a8;--line:#333;--panel:#1f1f1f;--red:#ff6161;--sel:#2b1717;--dot:#666;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:56px 24px 72px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:64px;align-items:start}
+.grid.wide{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.eye{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 16px}
+.eye.g{color:var(--mute);margin:0 0 6px;font-size:12px}
+h1{font-size:clamp(36px,5.6vw,60px);line-height:1.08;letter-spacing:-.035em;font-weight:700;margin:0 0 24px}
+h2{font-size:clamp(28px,4.2vw,40px);line-height:1.15;letter-spacing:-.03em;font-weight:700;margin:0 0 12px}
+h2.h3{font-size:24px;margin:36px 0 14px}
+p{margin:0 0 14px}
+.lead{font-size:20px;line-height:1.55;margin:0 0 16px}
+.why,.inst,.note{color:var(--mute)}
+.note{font-size:14px}
+.btn{display:inline-flex;gap:10px;align-items:center;background:var(--btn);color:#fff;border:1px solid var(--btn);border-radius:4px;padding:16px 28px;font:600 17px Inter,system-ui,sans-serif;cursor:pointer;text-decoration:none}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.acts{margin:28px 0 30px}
+.meta{display:flex;flex-wrap:wrap;gap:14px 28px;border-top:1px solid var(--line);padding-top:26px;color:var(--mute);font-size:16px}
+.meta span{display:flex;gap:10px;align-items:center}
+.fw{list-style:none;margin:0 0 18px;padding:0;border-bottom:1px solid var(--line)}
+.fw li{display:flex;gap:18px;padding:16px 0;border-top:1px solid var(--line);font-size:18px}
+.fw b{color:var(--red);font-size:13px;padding-top:5px}
+.fw small{display:block;color:var(--mute);font-size:14px}
+.inst{margin-bottom:22px}
+.opt{display:block;margin:0 0 10px;cursor:pointer}
+.opt input{position:absolute;opacity:0}
+.box{display:flex;gap:16px;align-items:center;padding:20px 22px;border:1px solid var(--line);border-radius:6px;font-size:18px;line-height:1.4}
+.opt:hover .box{border-color:var(--mute)}
+.dot{width:24px;height:24px;border:1.5px solid var(--dot);border-radius:50%;flex:none}
+.opt input:checked+.box{border-color:var(--red);background:var(--sel)}
+.opt input:checked+.box .dot{border-color:var(--red);background:var(--red);box-shadow:inset 0 0 0 5px var(--sel)}
+.opt input:focus-visible+.box{outline:3px solid var(--red);outline-offset:2px}
+.adv{background:var(--panel);border-left:3px solid var(--red);padding:16px 20px;margin:26px 0 18px}
+.adv p{margin:0}
+.adv p+p{margin-top:2px}
+details{margin-bottom:26px}
+summary{color:var(--red);font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:" \2304"}
+details[open] summary::after{content:" \2303"}
+details p{margin:10px 0 0;color:var(--mute)}
+.nav{display:flex;gap:12px;justify-content:space-between}
+.side{border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.sh{background:var(--panel);padding:18px 20px}
+.sh p:last-child{margin:0}
+.sr{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:14px 20px;border-top:1px solid var(--line);border-left:3px solid transparent;font-size:15px}
+.sr.cur{background:var(--panel);border-left-color:var(--red);font-weight:600}
+.sr .t{grid-column:1/-1;height:3px;background:var(--line)}
+.sr .t i{display:block;height:100%;background:var(--red)}
+.sn{padding:14px 20px;margin:0;border-top:1px solid var(--line)}
+.res{max-width:760px}
+.score{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}
+.score b{font-size:clamp(84px,18vw,128px);line-height:1;letter-spacing:-.05em;color:var(--red)}
+.score span{font-size:26px;color:var(--mute)}
+.res .side{margin:26px 0}
+.todo{padding-left:22px;margin:0}
+.todo li{margin-bottom:14px;font-size:18px}
+.cta{margin-top:34px;padding-top:28px;border-top:1px solid var(--line)}
+@media (max-width:860px){.grid,.grid.wide{grid-template-columns:1fr;gap:36px}main{padding-top:36px}}
+</style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">A</span><span>AI readiness</span></div>
-      <div class="privacy">Private by design · answers stay in this browser</div>
-    </header>
-    <main>
-      <section class="intro" id="intro">
-        <div class="eyebrow">A practical self-assessment</div>
-        <h1>Is your organization ready for AI?</h1>
-        <p class="intro-copy">A clear-eyed look at the foundations that make AI useful: direction, data, people, governance, and delivery. Find your strongest next move in about five minutes.</p>
-        <div class="meta"><span>10 questions</span><span>5 readiness areas</span><span>No account needed</span></div>
-      </section>
-
-      <section class="assessment" id="assessment" aria-label="Assessment questions">
-        <div class="question-area">
-          <div class="progress-head"><span id="progress-label">Question 1 of 10</span><span id="progress-percent">10%</span></div>
-          <div class="progress-track" role="progressbar" aria-label="Assessment progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="1"><div class="progress-value" id="progress-value"></div></div>
-          <div id="question-host" aria-live="polite"></div>
-          <div class="question-nav">
-            <button class="button secondary" id="back-button" type="button">Back</button>
-            <button class="button" id="next-button" type="button" disabled>Next</button>
-          </div>
-        </div>
-        <aside class="side-note">
-          <h2>Five foundations</h2>
-          <p>Answer based on what is consistently true today, not what is planned or hoped for.</p>
-          <div class="category-list" id="category-list"></div>
-        </aside>
-      </section>
-
-      <section class="result" id="result" aria-live="polite" hidden>
-        <div class="result-top">
-          <div>
-            <div class="eyebrow">Your readiness snapshot</div>
-            <h2 id="result-title"></h2>
-            <p class="result-lead" id="result-lead"></p>
-          </div>
-          <div class="score-disc"><span class="score-number" id="score-number"></span><span class="score-caption">readiness score</span></div>
-        </div>
-        <div class="result-columns">
-          <section><h3>Readiness by area</h3><div class="result-categories" id="result-categories"></div></section>
-          <section><h3>Your next moves</h3><ol class="next-steps" id="next-steps"></ol></section>
-        </div>
-        <div class="result-actions">
-          <button class="button" id="restart-button" type="button">Start again</button>
-          <button class="button secondary" id="print-button" type="button" title="Print or save your results as PDF">Print results</button>
-        </div>
-        <p class="footnote">This snapshot is a conversation starter, not a certification or a substitute for domain-specific legal, security, or risk advice. Scores are calculated on this page and are not sent anywhere.</p>
-      </section>
-    </main>
-  </div>
-  <script>
-    const questions = [
-      { category: "Direction", title: "How clearly has leadership defined why you want to use AI?", hint: "Think beyond experimentation and tool adoption.", choices: ["There is no shared reason or direction yet.", "Interest exists, but priorities vary across teams.", "A few business priorities are agreed and tied to measurable outcomes.", "AI priorities are part of our strategy, with accountable owners and regular review."] },
-      { category: "Direction", title: "How do you decide which AI opportunities to pursue?", hint: "Consider how ideas move from suggestion to investment.", choices: ["Ideas are ad hoc, usually driven by individual enthusiasm.", "Teams are collecting use cases but rarely compare their value or risk.", "We assess value, feasibility, and risk before running focused pilots.", "We use consistent criteria and track outcomes to scale or stop initiatives."] },
-      { category: "Data", title: "Can teams access the data they need for priority work?", hint: "Consider quality, permissions, and how quickly data can be found.", choices: ["Important data is hard to find, fragmented, or unreliable.", "Some useful data exists, but access and quality require frequent workarounds.", "Priority data is documented, governed, and accessible to approved teams.", "Data products have clear owners, quality measures, and reliable access controls."] },
-      { category: "Data", title: "How well do you understand sensitive or restricted data?", hint: "Include personal, confidential, regulated, and third-party information.", choices: ["We have little visibility into where sensitive data lives.", "Some areas are mapped, but classification and handling are inconsistent.", "Key data is classified with documented rules for approved use.", "Classification, lineage, retention, and access are actively monitored."] },
-      { category: "People", title: "Do employees know how to use AI tools appropriately?", hint: "Think about practical skills as well as awareness of limitations.", choices: ["There is no guidance or training available.", "People share informal tips, but practices vary widely.", "Relevant teams have role-based guidance and basic training.", "Learning is ongoing, role-specific, and updated from real usage and incidents."] },
-      { category: "People", title: "Are the right people involved in AI decisions?", hint: "Include operational teams and affected users, not just technical teams.", choices: ["AI decisions happen without clear stakeholders or ownership.", "A few specialists are involved, usually late in the process.", "Business, technical, and risk stakeholders collaborate on priority projects.", "Affected teams co-design solutions and have clear decision rights throughout."] },
-      { category: "Governance", title: "How are AI risks reviewed before a solution is used?", hint: "Consider privacy, security, bias, safety, legal, and reputational risk.", choices: ["There is no consistent review process.", "Risks are considered informally or only when a concern is raised.", "A defined review is used for relevant projects before deployment.", "Reviews are proportionate to risk, documented, and revisited as systems change."] },
-      { category: "Governance", title: "Can you explain who is accountable for AI outcomes?", hint: "Include vendor tools and AI embedded in existing products.", choices: ["Ownership is unclear, especially when third-party tools are involved.", "Teams know who built a solution, but ongoing accountability is vague.", "Each production use has an owner and an escalation path.", "Ownership, human oversight, monitoring, and escalation are established and tested."] },
-      { category: "Delivery", title: "Can your teams test an AI idea safely before broad rollout?", hint: "Think environments, evaluation, user feedback, and rollback.", choices: ["We lack a safe way to test AI ideas.", "Small tests happen, but evaluation and safeguards are inconsistent.", "Teams can run bounded pilots with success criteria and human review.", "We have repeatable evaluation, monitoring, feedback, and rollback practices."] },
-      { category: "Delivery", title: "How do you know whether AI is delivering lasting value?", hint: "Consider performance after launch, not just initial time saved.", choices: ["We do not measure outcomes after trying a tool.", "We collect anecdotes or short-term productivity estimates.", "Priority uses have baseline measures and post-launch reviews.", "We track quality, cost, adoption, and unintended effects over time."] }
-    ];
-
-    const categories = ["Direction", "Data", "People", "Governance", "Delivery"];
-    const answers = Array(questions.length).fill(null);
-    let current = 0;
-    const questionHost = document.querySelector("#question-host");
-    const progressValue = document.querySelector("#progress-value");
-    const progressBar = document.querySelector("[role='progressbar']");
-
-    function renderCategories() {
-      document.querySelector("#category-list").innerHTML = categories.map((category) => {
-        const answered = questions.filter((item, index) => item.category === category && answers[index] !== null).length;
-        const percent = Math.round(answered / 2 * 100);
-        return `<div class="category-row"><span class="category-name">${category}</span><span class="category-state">${answered}/2 answered</span><div class="mini-track"><div class="mini-value" style="width:${percent}%"></div></div></div>`;
-      }).join("");
-    }
-
-    function renderQuestion() {
-      const question = questions[current];
-      const selected = answers[current];
-      const percent = Math.round((current + 1) / questions.length * 100);
-      document.querySelector("#progress-label").textContent = `Question ${current + 1} of ${questions.length}`;
-      document.querySelector("#progress-percent").textContent = `${percent}%`;
-      progressValue.style.width = `${percent}%`;
-      progressBar.setAttribute("aria-valuenow", String(current + 1));
-      document.querySelector("#back-button").disabled = current === 0;
-      document.querySelector("#next-button").disabled = selected === null;
-      document.querySelector("#next-button").textContent = current === questions.length - 1 ? "See results" : "Next";
-      questionHost.innerHTML = `<article class="question"><div class="eyebrow">${question.category}</div><h2 id="question-title">${question.title}</h2><p class="hint">${question.hint}</p><div class="choices" role="group" aria-labelledby="question-title">${question.choices.map((choice, index) => `<button class="choice" type="button" aria-pressed="${selected === index}" data-answer="${index}"><span class="choice-index">${String.fromCharCode(65 + index)}</span><span class="choice-copy">${choice}</span></button>`).join("")}</div></article>`;
-      questionHost.querySelectorAll(".choice").forEach((button) => {
-        button.addEventListener("click", () => {
-          answers[current] = Number(button.dataset.answer);
-          renderQuestion();
-          renderCategories();
-          questionHost.querySelector(".choice[aria-pressed='true']").focus();
-        });
-      });
-      renderCategories();
-    }
-
-    function recommendations(scores) {
-      const weakest = [...scores].sort((a, b) => a.value - b.value).slice(0, 3);
-      const advice = {
-        Direction: "Choose one business problem, name an accountable sponsor, and define a measurable outcome before selecting a tool.",
-        Data: "Map the data needed for one priority use case, identify its owner, and resolve access and quality gaps.",
-        People: "Give the teams who will use or be affected by AI practical guidance, training, and a clear way to raise concerns.",
-        Governance: "Create a lightweight risk review that covers privacy, security, human oversight, and who responds when something goes wrong.",
-        Delivery: "Run a bounded pilot with a baseline, success criteria, human checks, and a plan to stop or roll it back."
-      };
-      return weakest.map((item) => advice[item.category]);
-    }
-
-    function showResults() {
-      const total = answers.reduce((sum, answer) => sum + answer, 0);
-      const score = Math.round(total / (questions.length * 3) * 100);
-      const scores = categories.map((category) => {
-        const indexes = questions.map((item, index) => item.category === category ? index : -1).filter((index) => index !== -1);
-        const value = Math.round(indexes.reduce((sum, index) => sum + answers[index], 0) / (indexes.length * 3) * 100);
-        return { category, value };
-      });
-      const band = score < 40
-        ? ["Build the foundations", "Your answers point to early-stage foundations. Start with one well-understood business need, clarify ownership, and make data and risk expectations explicit before scaling experiments."]
-        : score < 70
-          ? ["Turn experiments into practice", "You have some useful building blocks, but readiness is uneven. Focus on repeatable ways to evaluate use cases, prepare data, and support the people doing the work."]
-          : score < 85
-            ? ["Strengthen what is working", "Your organization shows solid readiness across several foundations. Use your strongest practices to close the remaining gaps and make post-launch accountability routine."]
-            : ["Ready to scale with care", "Your answers suggest mature foundations for responsible adoption. Keep monitoring real-world outcomes, refreshing safeguards, and sharing learning across teams."];
-      document.querySelector("#score-number").textContent = `${score}%`;
-      document.querySelector("#result-title").textContent = band[0];
-      document.querySelector("#result-lead").textContent = band[1];
-      document.querySelector("#result-categories").innerHTML = scores.map(({ category, value }) => `<div class="result-category"><span>${category}</span><div class="mini-track"><div class="mini-value" style="width:${value}%"></div></div><strong>${value}%</strong></div>`).join("");
-      document.querySelector("#next-steps").innerHTML = recommendations(scores).map((step) => `<li>${step}</li>`).join("");
-      document.querySelector("#intro").hidden = true;
-      document.querySelector("#assessment").hidden = true;
-      document.querySelector("#result").hidden = false;
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    document.querySelector("#back-button").addEventListener("click", () => {
-      if (current > 0) { current -= 1; renderQuestion(); }
-    });
-    document.querySelector("#next-button").addEventListener("click", () => {
-      if (answers[current] === null) return;
-      if (current < questions.length - 1) { current += 1; renderQuestion(); }
-      else showResults();
-    });
-    document.querySelector("#restart-button").addEventListener("click", () => {
-      answers.fill(null);
-      current = 0;
-      document.querySelector("#result").hidden = true;
-      document.querySelector("#intro").hidden = false;
-      document.querySelector("#assessment").hidden = false;
-      renderQuestion();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-    document.querySelector("#print-button").addEventListener("click", () => window.print());
-    renderQuestion();
-  </script>
+<main id="app"></main>
+<script>
+var LINK="https://www.estuate.com/services/enterprise-ai-advisory/ai-readiness-assessment/";
+var STAGES=[
+{n:"The Mirror",s:"Guessing → Knowing",d:"Do you know what AI your business is actually using?",w:"Your biggest gap is visibility. You can’t build on tools you can’t see. Start with a one-page list of what your team really uses."},
+{n:"The Workbench",s:"Licensed → Building",d:"Are you building with AI, or just paying for it?",w:"Your biggest gap is turning individual habits into shared systems. Right now the good results live in people’s heads."},
+{n:"The Edge",s:"Efficient → Harder to Compete With",d:"Is AI making you harder to compete with?",w:"Your biggest gap is getting customers to feel the difference. Faster inside the business isn’t an advantage until they notice."}];
+var Q=[
+["Do you know which AI tools your team used last week?","No idea","Some of them","Yes, all of them, and who uses each"],
+["Can you name one task that’s quicker today because of AI?","No","Yes, but I haven’t measured it","Yes, and I know roughly how much time or money it saves"],
+["Who decides which AI tools your team uses?","Whoever wants to try one","I approve some, but others slip in","One person manages a short approved list"],
+["Do you have rules on what customer information can go into AI tools?","No rules","Unwritten, “everyone knows”","Written down, and the team follows it"],
+["How do you know where you stand against competitors on AI?","Gut feel or what I’ve read","I’ve looked at a competitor or two","I’ve checked named competitors in the last six months"],
+["When did you last ask your team what’s working and what isn’t with AI?","Never","A casual chat, nothing changed","Recently, and we changed something because of it"],
+["Does your team actually use the AI tools you pay for?","At least one sits unused","Yes, but everyone uses them their own way","Yes, each tool has a set job and people stick to it"],
+["Has any repeat job, like quotes, follow-ups, or reports, changed because of AI?","No","One has, but it needs babysitting","At least one now runs the same way every time"],
+["When someone gets a great result from AI, what happens to it?","It stays with that person","They mention it, then it’s forgotten","It’s saved so others can reuse it"],
+["If your most AI-savvy person left tomorrow, what would happen?","Most of it would leave with them","We’d lose some of it","Very little would change"],
+["Is AI-written work checked before a customer sees it?","Not usually","Usually, but there’s no set standard","Always, and one person owns the check"],
+["Have you loaded your own material into your AI tools, such as pricing, past jobs, or how you talk to customers?","No","Once, a little","Yes, and we keep it up to date"],
+["Has AI changed what you can promise customers?","No","We’re faster inside, but customers haven’t noticed","Yes, and customers have commented on it"],
+["If a competitor bought the same AI tools tomorrow, what would you lose?","Nothing, we’d be level","Some speed","Not much, because what we’ve built around the tools can’t be bought"],
+["Has AI changed how you price or package your work?","No","It’s improved our margins, but prices are the same","Yes, we’ve changed pricing or taken on work we’d have turned down"],
+["How fast do you respond to a new enquiry compared to a year ago?","About the same","Faster sometimes, depending on who picks it up","Measurably faster, and it’s winning us jobs"],
+["Can you name a customer you won or kept because of something AI lets you do?","No","I suspect so, but can’t prove it","Yes, I can name them"],
+["What happens to the time AI saves?","I’m not sure it’s been used for anything","It gets absorbed into more of the same work","We’ve pointed it at growing the business"]];
+var TIERS=[
+{max:12,t:"You’re using AI, but you can’t see it yet.",d:"Someone on your team has probably tried ChatGPT or a similar tool, maybe you have too, but nobody could tell you what it’s used for, what it costs, or what it’s saved. Nothing is written down and nobody owns it, so AI is happening in your business without being part of it. Any sense you have of being “about right” is a guess.",
+a:["Ask every person on your team one question this week: “What AI tools do you use for work, and what for?” Put the answers in one shared list, including free tools and personal accounts.","Pick the task that eats the most hours each week (quotes, scheduling, follow-ups, reports) and write down how long it takes now. You can’t see what AI changes without a starting number.","Write a three-line rule on customer information: what can never be pasted into an AI tool, what’s fine, and who to ask. Send it to the team today."],
+c:"You need a clear picture before a plan. Start with the free AI Reality Check and fill it in with your team this week.",b:"Get the free AI Reality Check"},
+{max:24,t:"You’re further along than most, and it’s not showing in the numbers yet.",d:"You know what tools your team uses and you have a few real wins, like a faster first draft or a cleaner weekly report. But the wins live in individual people’s habits. If your best AI user left, most of it would go with them, and customers haven’t noticed anything different. You’re getting efficiency from AI, not an advantage.",
+a:["Take your best AI win and write it as a one-page how-to: the tool, the exact instructions, what gets checked, and who checks it. Then have a second person run it from the page alone.","Name one person as owner of AI in your business and give them two hours a week for the approved tool list, the customer-information rules, and a monthly “what’s working” review.","Pick one customer-facing moment (enquiry reply, quote turnaround, post-job follow-up), set a target such as “every enquiry gets a real reply within 30 minutes,” and track it for 30 days."],
+c:"The gap is usually a few processes built properly and a team running them the same way. That’s what the AI Builders Cohort is for.",b:"Join the AI Builders Cohort"},
+{max:36,t:"You’ve built something. Now it’s about how fast you can extend it.",d:"You know what’s running, who owns it, and what it’s worth. At least some of your processes run the same way whoever does them, and you can point to customers who chose or stayed with you because of it. The risk at this score isn’t being behind. Your own time is now the bottleneck, and every new system competes with running the business.",
+a:["List every AI-supported process and put a rough dollar figure against each (hours saved, jobs won, errors avoided). Double down on the top two and question the bottom two.","Find the part of your service customers still wait on (quotes, scheduling, onboarding, reporting) and ask if it could take a quarter of the time. If yes, that’s your next build.","Document your best system so a new hire could run it from your notes. If a competitor couldn’t copy it from the outside, it’s an asset. If not, that’s the work."],
+c:"You don’t need more tips, you need more hours. Hand your next build to us and stay in the business instead of the tools.",b:"Start a done-for-you build"}];
+var TIP=["Think about last week specifically, not what the team could be using.","Think of a task you could show someone, not one you’ve only been told about.","Think about who would actually say yes or no to a new tool today.","Think about whether a new hire would find this rule without asking.","Think about what you’ve checked yourself, not what you’ve heard at events.","Think about whether anything changed afterward, not just whether you asked.","Think about logins, not licences. Who opened the tool this week?","Think about a job that now runs differently, not one that’s just easier for one person.","Think about the last time it happened and where the result ended up.","Think about who else could run it from a written note today.","Think about the last thing a customer received that AI helped write.","Think about whether the tool knows your business or only the internet.","Think about what a customer can see or feel, not what changed behind the scenes.","Think about what’s left if the subscription is the only thing a competitor copies.","Think about your last price list or package. Did AI change it?","Think about the typical enquiry, not your best day.","Think of a real customer name. If none comes to mind, that’s your answer.","Think about where last month’s saved hours actually went."];
+var WHY=["You can’t manage, secure, or improve what you can’t name. Every AI plan starts with this list.","Time saved is the first proof AI is doing anything. Without a number, it’s an opinion.","Tools that arrive unchecked bring cost, duplicates, and data risk. One owner fixes all three.","Customer details pasted into the wrong tool is the fastest way to create a problem you didn’t know you had.","Owners who guess their position tend to overestimate it. A direct look corrects that.","Your team sees what works long before you do. Acting on it shows them it’s worth reporting.","Paid tools nobody opens are the clearest sign of licensed, not building.","A changed process keeps its value when people are away. A personal habit doesn’t.","Good results that stay with one person disappear when that person does.","If one person holds all of it, your AI progress is one resignation away from zero.","One wrong AI-written line to a customer costs more trust than a hundred right ones earn.","Generic AI gives generic answers. Your pricing, history, and voice are what make it yours.","Customers pay for what they notice. Internal speed only matters if it reaches them.","If the tools are the only difference, you have no edge. What you build on top is the edge.","Pricing is where an advantage turns into money.","Speed of reply is one of the strongest levers on who wins the job.","A named customer turns a feeling into evidence.","Saved time only creates an advantage if it’s pointed at something."];
+var app=document.getElementById("app"),scr="intro",idx=0,ans=[],order=[];
+for(var i=0;i<18;i++){ans.push(null);var o=[0,1,2];for(var j=2;j>0;j--){var k=Math.floor(Math.random()*(j+1));var x=o[j];o[j]=o[k];o[k]=x}order.push(o)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function ic(d){return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+d+'"/></svg>'}
+function show(){window.scrollTo(0,0);if(scr==="intro")intro();else if(scr==="q")ques();else result()}
+function intro(){
+var h='<div class="grid wide"><section><p class="eye">AI readiness assessment</p><h1>Most businesses think they’re further along with AI than they are.</h1><p class="lead">Answer 18 plain questions and get a scored result showing where you actually stand, and what to do first.</p><p class="why">Most businesses already pay for Copilot, ChatGPT, or both. Far fewer have changed how a single job gets done with them. That’s the gap. The tools are the same everywhere, so the businesses pulling ahead are the ones that built something on top of them.</p><div class="acts"><button class="btn" id="go">Start assessment '+ic("M5 12h14M13 6l6 6-6 6")+'</button></div><div class="meta"><span>'+ic("M12 7v5l3 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z")+'About 5 minutes</span><span>'+ic("M4 6h16M4 12h16M4 18h10")+'18 questions</span><span>'+ic("M5 12l5 5L20 7")+'Your score and 3 first steps</span></div></section><aside><p class="eye g">The framework</p><ol class="fw">';
+STAGES.forEach(function(S,i){h+='<li><b>0'+(i+1)+'</b><div>'+S.n+'<small>'+S.s+'</small></div></li>'});
+h+='</ol><p class="note">Every answer is scored against these three stages, then read as one picture: what you think you have against what you’ve built.</p></aside></div>';
+app.innerHTML=h;document.getElementById("go").onclick=function(){scr="q";idx=0;show()}}
+function ques(){
+var s=Math.floor(idx/6),S=STAGES[s],n=ans.filter(function(v){return v!==null}).length;
+var h='<div class="grid"><section><p class="eye">'+ic("M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z")+S.n+'</p><h2>'+esc(Q[idx][0])+'</h2><p class="inst">Select the statement closest to how things work today.</p>';
+order[idx].forEach(function(p){h+='<label class="opt"><input type="radio" name="a" value="'+p+'"'+(ans[idx]===p?' checked':'')+'><span class="box"><i class="dot"></i>'+esc(Q[idx][p+1])+'</span></label>'});
+h+='<div class="adv"><p class="eye g">Advisor note</p><p>'+TIP[idx]+'</p></div><details><summary>Why this matters</summary><p>'+WHY[idx]+'</p></details><div class="nav"><button class="btn ghost" id="back">Back</button><button class="btn" id="next"'+(ans[idx]===null?' disabled':'')+'>'+(idx===17?'See my scorecard':'Continue')+'</button></div></section><aside class="side"><div class="sh"><p class="eye g">Readiness framework</p><p>'+n+' of 18 answered</p></div>';
+STAGES.forEach(function(X,i){var c=0;for(var q=i*6;q<i*6+6;q++)if(ans[q]!==null)c++;h+='<div class="sr'+(i===s?' cur':'')+'"><span>'+X.n+'</span><b>'+c+'/6</b><div class="t"><i style="width:'+(c/6*100)+'%"></i></div></div>'});
+h+='<p class="note sn">Your score appears when all 18 questions are answered.</p></aside></div>';
+app.innerHTML=h;
+app.querySelectorAll("input").forEach(function(el){el.onchange=function(){ans[idx]=+el.value;ques();app.querySelector("input:checked").focus()}});
+document.getElementById("next").onclick=function(){if(idx<17)idx++;else scr="res";show()};
+document.getElementById("back").onclick=function(){if(idx>0)idx--;else scr="intro";show()}}
+function result(){
+var st=[0,0,0],tot=0;ans.forEach(function(v,i){st[Math.floor(i/6)]+=v;tot+=v});
+var T=TIERS.filter(function(t){return tot<=t.max})[0],weak=st.indexOf(Math.min.apply(null,st));
+var h='<div class="res"><p class="eye">Your scorecard</p><div class="score"><b>'+tot+'</b><span>out of 36</span></div><h2>'+T.t+'</h2><p class="lead">'+T.d+'</p><div class="side"><div class="sh"><p class="eye g">Score by stage</p></div>';
+STAGES.forEach(function(S,i){h+='<div class="sr'+(i===weak?' cur':'')+'"><span>'+S.n+(i===weak?' (biggest gap)':'')+'</span><b>'+st[i]+'/12</b><div class="t"><i style="width:'+(st[i]/12*100)+'%"></i></div></div>'});
+h+='</div><div class="adv"><p class="eye g">Where to focus</p><p>'+STAGES[weak].w+'</p></div>';
+if(ans[4]===2&&ans[16]===0)h+='<div class="adv"><p class="eye g">One thing stands out</p><p>You said you’ve checked how competitors are doing, but you can’t name a customer AI has won or kept for you. That’s the gap between how far along you feel and what you can prove.</p></div>';
+h+='<h2 class="h3">Do these three things first</h2><ol class="todo">';
+T.a.forEach(function(a){h+='<li>'+esc(a)+'</li>'});
+h+='</ol><div class="cta"><p class="lead">'+T.c+'</p><a class="btn" href="'+LINK+'" target="_blank" rel="noopener">'+T.b+' '+ic("M5 12h14M13 6l6 6-6 6")+'</a></div><p style="margin-top:28px"><button class="btn ghost" id="again">Retake the assessment</button></p></div>';
+app.innerHTML=h;document.getElementById("again").onclick=function(){location.reload()}}
+show();
+</script>
 </body>
 </html>
