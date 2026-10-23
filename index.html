@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f3ec">
+  <meta name="description" content="A practical self-assessment for understanding your organization's readiness to adopt AI responsibly and effectively.">
+  <title>AI Readiness Assessment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f3ec;
+      --ink: #20271f;
+      --muted: #687064;
+      --line: #d8dbcf;
+      --green: #285c45;
+      --green-dark: #183e30;
+      --lime: #d5e57b;
+      --coral: #e77b5d;
+      --white: #fffefa;
+      --serif: "Fraunces", Georgia, serif;
+      --sans: "DM Sans", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.5 var(--sans);
+      background-image: radial-gradient(#a4ad94 0.55px, transparent 0.55px);
+      background-size: 8px 8px;
+    }
+    button { font: inherit; }
+    .shell { max-width: 1120px; margin: 0 auto; padding: 0 34px; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      min-height: 76px; border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; letter-spacing: 0; }
+    .brand-mark { display: grid; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--green); color: var(--lime); font-size: 15px; }
+    .privacy { color: var(--muted); font-size: 13px; }
+    main { padding: 68px 0 80px; }
+    .intro { max-width: 760px; animation: rise .55s ease-out both; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 25px; height: 2px; background: var(--coral); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 720px; margin: 17px 0 20px; font: 600 clamp(42px, 6vw, 72px)/.99 var(--serif); letter-spacing: 0; }
+    .intro-copy { max-width: 570px; margin-bottom: 28px; color: var(--muted); font-size: 17px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px 24px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .meta span { display: inline-flex; align-items: center; gap: 8px; }
+    .meta span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--coral); }
+    .assessment { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 68px; margin-top: 55px; align-items: start; }
+    .question-area { min-width: 0; }
+    .progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: var(--muted); font-size: 13px; }
+    .progress-track { height: 5px; overflow: hidden; background: #e0e3d8; }
+    .progress-value { width: 0; height: 100%; background: var(--green); transition: width .25s ease; }
+    .question { padding: 30px 0 25px; border-bottom: 1px solid var(--line); animation: rise .35s ease-out both; }
+    .question h2 { margin-bottom: 7px; font: 600 25px/1.2 var(--serif); letter-spacing: 0; }
+    .question .hint { margin-bottom: 18px; color: var(--muted); font-size: 14px; }
+    .choices { display: grid; gap: 8px; }
+    .choice {
+      display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start;
+      width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 3px;
+      background: var(--white); color: var(--ink); text-align: left; cursor: pointer;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+    .choice:hover { border-color: var(--green); transform: translateX(2px); }
+    .choice[aria-pressed="true"] { border-color: var(--green); background: #eaf0e7; box-shadow: inset 3px 0 var(--green); }
+    .choice-index { display: grid; width: 21px; height: 21px; place-items: center; border: 1px solid #bfc6b9; border-radius: 50%; color: var(--muted); font-size: 11px; }
+    .choice[aria-pressed="true"] .choice-index { border-color: var(--green); background: var(--green); color: white; }
+    .choice-copy { font-size: 14px; }
+    .question-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 23px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; min-height: 45px; padding: 0 18px; border: 1px solid var(--green); border-radius: 3px; background: var(--green); color: white; font-weight: 600; cursor: pointer; transition: background .15s ease, transform .15s ease; }
+    .button:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-1px); }
+    .button:disabled { border-color: #c7cbbf; background: #c7cbbf; cursor: not-allowed; }
+    .button.secondary { background: transparent; color: var(--green); }
+    .button.secondary:hover:not(:disabled) { background: #e8eadf; }
+    .side-note { position: sticky; top: 25px; padding-top: 4px; }
+    .side-note h2 { margin-bottom: 13px; font: 600 22px/1.15 var(--serif); }
+    .side-note p { color: var(--muted); font-size: 14px; }
+    .category-list { display: grid; gap: 0; margin-top: 25px; border-top: 1px solid var(--line); }
+    .category-row { display: grid; grid-template-columns: 1fr auto; gap: 5px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .category-name { font-size: 13px; font-weight: 600; }
+    .category-state { color: var(--muted); font-size: 11px; }
+    .mini-track { grid-column: 1 / -1; height: 3px; background: #e0e3d8; }
+    .mini-value { height: 100%; width: 0; background: var(--green); transition: width .2s ease; }
+    .result { margin-top: 55px; padding-top: 38px; border-top: 1px solid var(--line); animation: rise .45s ease-out both; }
+    .result[hidden], .intro[hidden], .assessment[hidden] { display: none; }
+    .result-top { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 36px; align-items: center; }
+    .result h2 { max-width: 600px; margin: 12px 0; font: 600 42px/1.05 var(--serif); }
+    .result-lead { max-width: 620px; color: var(--muted); }
+    .score-disc { display: grid; width: 150px; aspect-ratio: 1; place-content: center; justify-self: end; border: 1px solid var(--green); border-radius: 50%; background: var(--lime); text-align: center; }
+    .score-number { font: 600 44px/.95 var(--serif); }
+    .score-caption { margin-top: 7px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .result-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 54px; margin-top: 38px; }
+    .result-columns h3 { margin-bottom: 13px; font-size: 14px; }
+    .result-categories { display: grid; gap: 13px; }
+    .result-category { display: grid; grid-template-columns: 125px 1fr 35px; gap: 10px; align-items: center; font-size: 12px; }
+    .result-category .mini-track { grid-column: auto; }
+    .result-category strong { text-align: right; font-size: 12px; }
+    .next-steps { margin: 0; padding-left: 19px; color: var(--muted); font-size: 14px; }
+    .next-steps li { padding: 0 0 10px 4px; }
+    .result-actions { display: flex; gap: 10px; margin-top: 31px; }
+    .footnote { margin: 35px 0 0; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    :focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+    @keyframes rise { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 760px) {
+      .shell { padding: 0 20px; }
+      main { padding: 46px 0 55px; }
+      .topbar { min-height: 64px; }
+      .assessment { grid-template-columns: 1fr; gap: 30px; margin-top: 40px; }
+      .side-note { position: static; padding-top: 20px; border-top: 1px solid var(--line); }
+      .category-list { grid-template-columns: 1fr 1fr; column-gap: 20px; }
+      .result-top { grid-template-columns: 1fr 110px; gap: 15px; }
+      .result h2 { font-size: 34px; }
+      .score-disc { width: 105px; }
+      .score-number { font-size: 34px; }
+      .result-columns { grid-template-columns: 1fr; gap: 28px; }
+    }
+    @media (max-width: 420px) {
+      .privacy { max-width: 112px; text-align: right; font-size: 11px; }
+      .meta { gap: 8px 15px; }
+      .question h2 { font-size: 22px; }
+      .category-list { grid-template-columns: 1fr; }
+      .result-category { grid-template-columns: 105px 1fr 32px; gap: 7px; }
+      .result-actions { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">A</span><span>AI readiness</span></div>
+      <div class="privacy">Private by design · answers stay in this browser</div>
+    </header>
+    <main>
+      <section class="intro" id="intro">
+        <div class="eyebrow">A practical self-assessment</div>
+        <h1>Is your organization ready for AI?</h1>
+        <p class="intro-copy">A clear-eyed look at the foundations that make AI useful: direction, data, people, governance, and delivery. Find your strongest next move in about five minutes.</p>
+        <div class="meta"><span>10 questions</span><span>5 readiness areas</span><span>No account needed</span></div>
+      </section>
+
+      <section class="assessment" id="assessment" aria-label="Assessment questions">
+        <div class="question-area">
+          <div class="progress-head"><span id="progress-label">Question 1 of 10</span><span id="progress-percent">10%</span></div>
+          <div class="progress-track" role="progressbar" aria-label="Assessment progress" aria-valuemin="0" aria-valuemax="10" aria-valuenow="1"><div class="progress-value" id="progress-value"></div></div>
+          <div id="question-host" aria-live="polite"></div>
+          <div class="question-nav">
+            <button class="button secondary" id="back-button" type="button">Back</button>
+            <button class="button" id="next-button" type="button" disabled>Next</button>
+          </div>
+        </div>
+        <aside class="side-note">
+          <h2>Five foundations</h2>
+          <p>Answer based on what is consistently true today, not what is planned or hoped for.</p>
+          <div class="category-list" id="category-list"></div>
+        </aside>
+      </section>
+
+      <section class="result" id="result" aria-live="polite" hidden>
+        <div class="result-top">
+          <div>
+            <div class="eyebrow">Your readiness snapshot</div>
+            <h2 id="result-title"></h2>
+            <p class="result-lead" id="result-lead"></p>
+          </div>
+          <div class="score-disc"><span class="score-number" id="score-number"></span><span class="score-caption">readiness score</span></div>
+        </div>
+        <div class="result-columns">
+          <section><h3>Readiness by area</h3><div class="result-categories" id="result-categories"></div></section>
+          <section><h3>Your next moves</h3><ol class="next-steps" id="next-steps"></ol></section>
+        </div>
+        <div class="result-actions">
+          <button class="button" id="restart-button" type="button">Start again</button>
+          <button class="button secondary" id="print-button" type="button" title="Print or save your results as PDF">Print results</button>
+        </div>
+        <p class="footnote">This snapshot is a conversation starter, not a certification or a substitute for domain-specific legal, security, or risk advice. Scores are calculated on this page and are not sent anywhere.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    const questions = [
+      { category: "Direction", title: "How clearly has leadership defined why you want to use AI?", hint: "Think beyond experimentation and tool adoption.", choices: ["There is no shared reason or direction yet.", "Interest exists, but priorities vary across teams.", "A few business priorities are agreed and tied to measurable outcomes.", "AI priorities are part of our strategy, with accountable owners and regular review."] },
+      { category: "Direction", title: "How do you decide which AI opportunities to pursue?", hint: "Consider how ideas move from suggestion to investment.", choices: ["Ideas are ad hoc, usually driven by individual enthusiasm.", "Teams are collecting use cases but rarely compare their value or risk.", "We assess value, feasibility, and risk before running focused pilots.", "We use consistent criteria and track outcomes to scale or stop initiatives."] },
+      { category: "Data", title: "Can teams access the data they need for priority work?", hint: "Consider quality, permissions, and how quickly data can be found.", choices: ["Important data is hard to find, fragmented, or unreliable.", "Some useful data exists, but access and quality require frequent workarounds.", "Priority data is documented, governed, and accessible to approved teams.", "Data products have clear owners, quality measures, and reliable access controls."] },
+      { category: "Data", title: "How well do you understand sensitive or restricted data?", hint: "Include personal, confidential, regulated, and third-party information.", choices: ["We have little visibility into where sensitive data lives.", "Some areas are mapped, but classification and handling are inconsistent.", "Key data is classified with documented rules for approved use.", "Classification, lineage, retention, and access are actively monitored."] },
+      { category: "People", title: "Do employees know how to use AI tools appropriately?", hint: "Think about practical skills as well as awareness of limitations.", choices: ["There is no guidance or training available.", "People share informal tips, but practices vary widely.", "Relevant teams have role-based guidance and basic training.", "Learning is ongoing, role-specific, and updated from real usage and incidents."] },
+      { category: "People", title: "Are the right people involved in AI decisions?", hint: "Include operational teams and affected users, not just technical teams.", choices: ["AI decisions happen without clear stakeholders or ownership.", "A few specialists are involved, usually late in the process.", "Business, technical, and risk stakeholders collaborate on priority projects.", "Affected teams co-design solutions and have clear decision rights throughout."] },
+      { category: "Governance", title: "How are AI risks reviewed before a solution is used?", hint: "Consider privacy, security, bias, safety, legal, and reputational risk.", choices: ["There is no consistent review process.", "Risks are considered informally or only when a concern is raised.", "A defined review is used for relevant projects before deployment.", "Reviews are proportionate to risk, documented, and revisited as systems change."] },
+      { category: "Governance", title: "Can you explain who is accountable for AI outcomes?", hint: "Include vendor tools and AI embedded in existing products.", choices: ["Ownership is unclear, especially when third-party tools are involved.", "Teams know who built a solution, but ongoing accountability is vague.", "Each production use has an owner and an escalation path.", "Ownership, human oversight, monitoring, and escalation are established and tested."] },
+      { category: "Delivery", title: "Can your teams test an AI idea safely before broad rollout?", hint: "Think environments, evaluation, user feedback, and rollback.", choices: ["We lack a safe way to test AI ideas.", "Small tests happen, but evaluation and safeguards are inconsistent.", "Teams can run bounded pilots with success criteria and human review.", "We have repeatable evaluation, monitoring, feedback, and rollback practices."] },
+      { category: "Delivery", title: "How do you know whether AI is delivering lasting value?", hint: "Consider performance after launch, not just initial time saved.", choices: ["We do not measure outcomes after trying a tool.", "We collect anecdotes or short-term productivity estimates.", "Priority uses have baseline measures and post-launch reviews.", "We track quality, cost, adoption, and unintended effects over time."] }
+    ];
+
+    const categories = ["Direction", "Data", "People", "Governance", "Delivery"];
+    const answers = Array(questions.length).fill(null);
+    let current = 0;
+    const questionHost = document.querySelector("#question-host");
+    const progressValue = document.querySelector("#progress-value");
+    const progressBar = document.querySelector("[role='progressbar']");
+
+    function renderCategories() {
+      document.querySelector("#category-list").innerHTML = categories.map((category) => {
+        const answered = questions.filter((item, index) => item.category === category && answers[index] !== null).length;
+        const percent = Math.round(answered / 2 * 100);
+        return `<div class="category-row"><span class="category-name">${category}</span><span class="category-state">${answered}/2 answered</span><div class="mini-track"><div class="mini-value" style="width:${percent}%"></div></div></div>`;
+      }).join("");
+    }
+
+    function renderQuestion() {
+      const question = questions[current];
+      const selected = answers[current];
+      const percent = Math.round((current + 1) / questions.length * 100);
+      document.querySelector("#progress-label").textContent = `Question ${current + 1} of ${questions.length}`;
+      document.querySelector("#progress-percent").textContent = `${percent}%`;
+      progressValue.style.width = `${percent}%`;
+      progressBar.setAttribute("aria-valuenow", String(current + 1));
+      document.querySelector("#back-button").disabled = current === 0;
+      document.querySelector("#next-button").disabled = selected === null;
+      document.querySelector("#next-button").textContent = current === questions.length - 1 ? "See results" : "Next";
+      questionHost.innerHTML = `<article class="question"><div class="eyebrow">${question.category}</div><h2 id="question-title">${question.title}</h2><p class="hint">${question.hint}</p><div class="choices" role="group" aria-labelledby="question-title">${question.choices.map((choice, index) => `<button class="choice" type="button" aria-pressed="${selected === index}" data-answer="${index}"><span class="choice-index">${String.fromCharCode(65 + index)}</span><span class="choice-copy">${choice}</span></button>`).join("")}</div></article>`;
+      questionHost.querySelectorAll(".choice").forEach((button) => {
+        button.addEventListener("click", () => {
+          answers[current] = Number(button.dataset.answer);
+          renderQuestion();
+          renderCategories();
+          questionHost.querySelector(".choice[aria-pressed='true']").focus();
+        });
+      });
+      renderCategories();
+    }
+
+    function recommendations(scores) {
+      const weakest = [...scores].sort((a, b) => a.value - b.value).slice(0, 3);
+      const advice = {
+        Direction: "Choose one business problem, name an accountable sponsor, and define a measurable outcome before selecting a tool.",
+        Data: "Map the data needed for one priority use case, identify its owner, and resolve access and quality gaps.",
+        People: "Give the teams who will use or be affected by AI practical guidance, training, and a clear way to raise concerns.",
+        Governance: "Create a lightweight risk review that covers privacy, security, human oversight, and who responds when something goes wrong.",
+        Delivery: "Run a bounded pilot with a baseline, success criteria, human checks, and a plan to stop or roll it back."
+      };
+      return weakest.map((item) => advice[item.category]);
+    }
+
+    function showResults() {
+      const total = answers.reduce((sum, answer) => sum + answer, 0);
+      const score = Math.round(total / (questions.length * 3) * 100);
+      const scores = categories.map((category) => {
+        const indexes = questions.map((item, index) => item.category === category ? index : -1).filter((index) => index !== -1);
+        const value = Math.round(indexes.reduce((sum, index) => sum + answers[index], 0) / (indexes.length * 3) * 100);
+        return { category, value };
+      });
+      const band = score < 40
+        ? ["Build the foundations", "Your answers point to early-stage foundations. Start with one well-understood business need, clarify ownership, and make data and risk expectations explicit before scaling experiments."]
+        : score < 70
+          ? ["Turn experiments into practice", "You have some useful building blocks, but readiness is uneven. Focus on repeatable ways to evaluate use cases, prepare data, and support the people doing the work."]
+          : score < 85
+            ? ["Strengthen what is working", "Your organization shows solid readiness across several foundations. Use your strongest practices to close the remaining gaps and make post-launch accountability routine."]
+            : ["Ready to scale with care", "Your answers suggest mature foundations for responsible adoption. Keep monitoring real-world outcomes, refreshing safeguards, and sharing learning across teams."];
+      document.querySelector("#score-number").textContent = `${score}%`;
+      document.querySelector("#result-title").textContent = band[0];
+      document.querySelector("#result-lead").textContent = band[1];
+      document.querySelector("#result-categories").innerHTML = scores.map(({ category, value }) => `<div class="result-category"><span>${category}</span><div class="mini-track"><div class="mini-value" style="width:${value}%"></div></div><strong>${value}%</strong></div>`).join("");
+      document.querySelector("#next-steps").innerHTML = recommendations(scores).map((step) => `<li>${step}</li>`).join("");
+      document.querySelector("#intro").hidden = true;
+      document.querySelector("#assessment").hidden = true;
+      document.querySelector("#result").hidden = false;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelector("#back-button").addEventListener("click", () => {
+      if (current > 0) { current -= 1; renderQuestion(); }
+    });
+    document.querySelector("#next-button").addEventListener("click", () => {
+      if (answers[current] === null) return;
+      if (current < questions.length - 1) { current += 1; renderQuestion(); }
+      else showResults();
+    });
+    document.querySelector("#restart-button").addEventListener("click", () => {
+      answers.fill(null);
+      current = 0;
+      document.querySelector("#result").hidden = true;
+      document.querySelector("#intro").hidden = false;
+      document.querySelector("#assessment").hidden = false;
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    document.querySelector("#print-button").addEventListener("click", () => window.print());
+    renderQuestion();
+  </script>
+</body>
+</html>
